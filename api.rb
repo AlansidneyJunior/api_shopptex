@@ -1,13 +1,19 @@
 require 'sinatra'
 require 'json'
+set :bind, '0.0.0.0'
+set :port, 4567
 
 # Habilitando CORS
 before do
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, X-Requested-With'
+    content_type :json
+    headers 'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Methods' => ['GET'],
+            'Access-Control-Allow-Headers' => 'Content-Type'
 end
-
+  
+options '*' do
+    200
+end
 
 products = [
     {
@@ -41,12 +47,11 @@ shop_info = {
 
 get "/products" do
     content_type :json
-    {products: products}.to_json
-    status 200
+    products.to_json
 end
 
-get "info" do
+get "/info" do
     content_type :json
-    {info: shop_info}
-    status 200
+    shop_info.to_json
 end
+
